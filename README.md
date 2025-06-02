@@ -1,5 +1,4 @@
 # PowerBI Service: PowerShell scripts for analysis and processing
-Powershell scripts:
 
 Summary:
 * PowerBI-Inventory.ps1: Basic script to pull workspace data and reports from each workspace - downloads each file to json, processes and deletes at end. Can be set to diagnostic mode to not delete files after running.
