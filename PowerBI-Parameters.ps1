@@ -84,7 +84,6 @@ $param_values = foreach ($roww in $dataset_obj2) {
     $dataset_name = $roww.d_name
     $workspace_name = $roww.w_name
 
-    Write-Host "groups/$workspaceid/datasets/$datasetid/parameters"
     $parameters = Invoke-PowerBIRestMethod -Url "groups/$workspaceid/datasets/$datasetid/parameters" -Method Get
     $parameters = $parameters | ConvertFrom-Json
     
