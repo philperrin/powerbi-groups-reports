@@ -128,6 +128,6 @@ $result_count = $param_details.count
 Write-Host "Done! Exporting results ($result_count)."
 
 # Export results to file.
-$param_details | Select-Object -Property datasetid,dataset_name,workspace_id,workspace_name,p_name,p_type,p_isRequired,p_currentvalue | Export-Csv -Path ".\dataset_parameters.csv"  -NoTypeInformation -Force
+$param_details | Select-Object -Property datasetid,dataset_name,workspace_id,workspace_name,p_name,p_type,p_isRequired,p_currentValue | Export-Csv -Path ".\dataset_parameters.csv"  -NoTypeInformation -Force
 
 Write-Host "Output complete. Please find the file 'dataset_parameters.csv' in the local directory."
