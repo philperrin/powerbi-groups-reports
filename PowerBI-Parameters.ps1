@@ -81,18 +81,19 @@ $dataset_obj2 = $dataset_obj2 | Where-Object { $_.d_name -notlike "*usage metric
 $ds_o2_count = $dataset_obj2.count
 
 Write-Host "Getting parameter values info from each dataset ($ds_o2_count)."
+Get-Date -Format "g"
 # Using the dataset id and the group id, pull the parameters from each dataset.
+$i=0
 $param_values = foreach ($roww in $dataset_obj2) {
     $w_id = $roww.w_id
     $d_id = $roww.d_id
     $d_name = $roww.d_name
     $w_name = $roww.w_name
-    try {
-        $parameters = Invoke-PowerBIRestMethod -Url "groups/$w_id/datasets/$d_id/parameters" -Method Get | ConvertFrom-Json -ErrorAction Stop
-    }
-    catch {
-        Write-Host "Error: $w_id/datasets/$d_id"
-    }
+
+    $i++
+    $percentComplete = ($i / $ds_o2_count) * 100
+    Write-Progress -Activity "Processing Items" -Status "Item $i of $ds_o2_count" -PercentComplete $percentComplete
+    $parameters = Invoke-PowerBIRestMethod -Url "groups/$w_id/datasets/$d_id/parameters" -Method Get | ConvertFrom-Json
     
     [PSCustomObject] @{
         d_id = $d_id
@@ -104,6 +105,7 @@ $param_values = foreach ($roww in $dataset_obj2) {
 }
 
 Write-Host "Done!"
+
 
 Write-Host "Let's put all the parameter details into their own columns."
 $param_details = foreach($row in $param_values){
@@ -136,6 +138,6 @@ $result_count = $param_details.count
 Write-Host "Done! Exporting results ($result_count)."
 
 # Export results to file.
-$param_details | Select-Object -Property d_id,d_name,w_id,w_name,p_name,p_type,p_isRequired,p_currentValue | Export-Csv -Path ".\dataset_parameters.csv"  -NoTypeInformation -Force
+$param_details | Select-Object -Property w_id,w_name,d_id,d_name,p_name,p_type,p_isRequired,p_currentValue | Export-Csv -Path ".\dataset_parameters.csv"  -NoTypeInformation -Force
 
 Write-Host "Output complete. Please find the file 'dataset_parameters.csv' in the local directory."
